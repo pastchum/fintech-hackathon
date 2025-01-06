@@ -2,7 +2,7 @@ import os
 import subprocess
 import json
 import asyncio
-
+#this is the class that manages the subprocesses, it will be used to run the scraper scripts
 class SubprocessManager:
     def __init__(self, script_name):
         self.script_path = os.path.join(os.path.dirname(__file__), "..", "scrapers", script_name)

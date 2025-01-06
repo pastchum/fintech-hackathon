@@ -12,7 +12,7 @@ def main():
     graph_config = {
         "llm": {
             "api_key": OPENAI_API_KEY,
-            "model": "openai/gpt-4o",
+            "model": "openai/gpt-4o-mini",
         },
     }
 
