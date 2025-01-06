@@ -25,11 +25,18 @@ export default function Register() {
   const [COO, setCOO] = useState<string>("");
   const [CFO, setCFO] = useState<string>("");
 
-  const [additional, setAdditional] = useState<{ [key: string]: string }>({});
   const [fields, setFields] =
     useState<{ id: number; name: string; position: string }[]>();
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    var additional: { [key: string]: string } = {};
+
+    fields?.map((field, index) => {
+      additional = { ...additional, [field.position]: field.name };
+    });
+
     const AppointmentHolders: AppointmentHolders = {
       CEO: CEO,
       COO: COO,
@@ -153,7 +160,11 @@ export default function Register() {
               Add Appointment Holder
             </button>
           </div>
-          <button type="submit" onClick={handleSubmit} className="w-full py-3">
+          <button
+            type="submit"
+            onClick={(e) => handleSubmit(e)}
+            className="w-full py-3"
+          >
             <div className="w-8/10 flex p-2 border bg-green-700 text-slate-50 flex align-center transition-transform transition scale-95 hover:scale-100 hover:bg-white hover:text-green-700 justify-center">
               Register
             </div>
