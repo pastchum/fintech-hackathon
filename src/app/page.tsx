@@ -1,84 +1,164 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Input } from "@nextui-org/input";
-import Image from "next/image";
-import FacecardPopup from "@/components/FacecardPopup";
 
-import eyeIcon from "@/icons/eye-open.png";
-import eyeClosedIcon from "@/icons/eye-invisible.png";
+type AppointmentHolders = {
+  CEO: string;
+  COO: string;
+  CFO: string;
+} & {
+  [key: string]: string;
+};
 
-export default function Home() {
-  const [userID, setUserID] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [visible, setVisible] = useState<boolean>(false);
+type formType = {
+  name: string;
+  companyName: string;
+  appointmentHolders: AppointmentHolders;
+};
 
-  const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
+export default function Register() {
+  const [company, setCompany] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [CEO, setCEO] = useState<string>("");
+  const [COO, setCOO] = useState<string>("");
+  const [CFO, setCFO] = useState<string>("");
+
+  const [additional, setAdditional] = useState<{ [key: string]: string }>({});
+  const [fields, setFields] =
+    useState<{ id: number; name: string; position: string }[]>();
 
   const handleSubmit = () => {
-    setOverlayVisible(true);
+    const AppointmentHolders: AppointmentHolders = {
+      CEO: CEO,
+      COO: COO,
+      CFO: CFO,
+      ...additional,
+    };
+
+    const formSubmit: formType = {
+      name: name,
+      companyName: company,
+      appointmentHolders: AppointmentHolders,
+    };
+
+    console.log(formSubmit);
+  };
+
+  const addField = () => {
+    setFields((prevFields) =>
+      prevFields
+        ? [...prevFields, { id: prevFields.length, name: "", position: "" }]
+        : [{ id: 0, name: "", position: "" }]
+    );
+  };
+
+  const handleFieldChange = (id: number, key: string, value: string) => {
+    setFields((prevFields) =>
+      prevFields?.map((field) =>
+        field.id === id ? { ...field, [key]: value } : field
+      )
+    );
   };
 
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      {overlayVisible && <FacecardPopup />}
-
       <div className="flex flex-row justify-between w-full pt-20">
-        <div>test</div>
-        <div className="w-1/5 space-y-2 mt-32">
-          <div className="text-2xl font-bold py-2 mt-32 pt-5">Client Login</div>
-          Enter your Northern Trust credentials below to sign in. Please contact
-          your relationship manager if you need to register.
-          <Input
-            label="UserID"
-            type="UserID"
-            value={userID}
-            onChange={(e) => setUserID(e.target.value)}
-          />
-          <Input
-            label="Password"
-            type={visible ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            endContent={
-              <button onClick={() => setVisible(!visible)}>
-                {visible ? (
-                  <Image
-                    src={eyeClosedIcon}
-                    className="w-5 h-5"
-                    alt="Invisible"
-                  ></Image>
-                ) : (
-                  <Image
-                    src={eyeIcon}
-                    className="w-5 h-5"
-                    alt="Visible"
-                  ></Image>
-                )}
-              </button>
-            }
-          />
-          <div className="p-1 text-slate-700 text-sm">Remember Me</div>
-          <div className="py-2 flex justify-between">
-            <button className="underline text-green-700 text-xs">
-              Forgot Password?
-            </button>
-            <a className="underline text-green-700 text-xs" href="/Register">
-              Register
-            </a>
+        <form className="flex flex-col space-y-3">
+          <div className="text-2xl font-bold py-2 mt-32 pt-5">Register</div>
+          <div>
+            Please input your details so you can register for an account.
           </div>
-          <button onClick={handleSubmit} className="w-full py-3">
-            <div className="w-8/10 flex p-2 border bg-green-700 text-slate-50 flex align-center justify-center transition-transform transition scale-95 hover:scale-100 hover:bg-white hover:text-green-700">
-              Log In
+          <Input
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            label="Company Name"
+            type="text"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+          />
+
+          <div className="font-bold p-2 border rounded-xl space-y-3">
+            Key Appointment Holders
+            <div className="flex flex-row space-x-2">
+              <Input label="CEO" type="text" disabled={true} />
+              <Input
+                label="Name"
+                type="text"
+                value={CEO}
+                onChange={(e) => setCEO(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-row space-x-2">
+              <Input label="COO" type="text" disabled={true} />
+              <Input
+                label="Name"
+                type="text"
+                value={COO}
+                onChange={(e) => setCOO(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-row space-x-2">
+              <Input label="CFO" type="text" disabled={true} />
+              <Input
+                label="Name"
+                type="text"
+                value={CFO}
+                onChange={(e) => setCFO(e.target.value)}
+              />
+            </div>
+            {fields &&
+              fields.map((field, index) => {
+                return (
+                  <div key={field.id} className="flex flex-row space-x-2">
+                    <Input
+                      label="Position"
+                      type="text"
+                      value={field.position}
+                      onChange={(e) =>
+                        handleFieldChange(field.id, "position", e.target.value)
+                      }
+                    />
+                    <Input
+                      label="Name"
+                      type="text"
+                      value={field.name}
+                      onChange={(e) =>
+                        handleFieldChange(field.id, "name", e.target.value)
+                      }
+                    />
+                  </div>
+                );
+              })}
+            <button
+              className={`${
+                fields &&
+                !fields[fields.length - 1].name &&
+                !fields[fields.length - 1].position
+                  ? "text-slate-500"
+                  : "text-green-700"
+              } text-xs m-2`}
+              onClick={addField}
+              disabled={
+                fields &&
+                !fields[fields.length - 1].name &&
+                !fields[fields.length - 1].position
+              }
+            >
+              Add Appointment Holder
+            </button>
+          </div>
+          <button type="submit" onClick={handleSubmit} className="w-full py-3">
+            <div className="w-8/10 flex p-2 border bg-green-700 text-slate-50 flex align-center transition-transform transition scale-95 hover:scale-100 hover:bg-white hover:text-green-700 justify-center">
+              Register
             </div>
           </button>
-          <div className="justify-center p-10 text-green-700 underline">
-            <a href="https://www.northerntrust.com/united-states/contact-us-corporate-overview">
-              Passport Help
-            </a>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   );
