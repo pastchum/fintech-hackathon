@@ -1,47 +1,43 @@
-import sys
 import os
+import subprocess
 import json
-from scrapegraphai.graphs import SmartScraperGraph
+import asyncio
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+class SubprocessManager:
+    def __init__(self, script_name):
+        self.script_path = os.path.join(os.path.dirname(__file__), "..", "scrapers", script_name)
+        if not os.path.exists(self.script_path):
+            raise FileNotFoundError(f"Subprocess script not found: {self.script_path}")
 
-from app.config import OPENAI_API_KEY
+    def run_subprocess(self, prompt, source_url):
+        """
+        Run the subprocess for the specified scraper script.
+        """
+        python_executable = os.path.join(
+            os.getenv("VIRTUAL_ENV") or "", "bin", "python3"
+        )
+        if not os.path.exists(python_executable):
+            python_executable = "python3"
 
-def main():
-    # Parse arguments passed to the subprocess
-    try:
-        input_data = json.loads(sys.argv[1])
-    except Exception as e:
-        print(f"Error parsing input data: {str(e)}", file=sys.stderr)
-        sys.exit(1)
-    prompt = input_data["prompt"]
-    source_url = input_data["source_url"]
+        process = subprocess.run(
+            [
+                python_executable,
+                self.script_path,
+                json.dumps({"prompt": prompt, "source_url": source_url}),
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
 
-    if not prompt or not source_url:
-        print("Error: Missing required arguments 'prompt' or 'source_url'.", file=sys.stderr)
-        sys.exit(1)
+        if process.returncode != 0:
+            raise RuntimeError(f"Subprocess failed with error: {process.stderr}")
 
-    graph_config = {
-        "llm": {
-            "api_key": OPENAI_API_KEY,
-            "model": "openai/gpt-4o-mini",
-        },
-    }
+        return json.loads(process.stdout)
 
-    # Run the scraper
-    smart_scraper_graph = SmartScraperGraph(
-        prompt=prompt,
-        source=source_url,
-        config=graph_config,
-    )
-
-    try:
-        result = smart_scraper_graph.run()  # Run synchronously in the subprocess
-        print(json.dumps(result))
-    except Exception as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+    async def run(self, prompt, source_url):
+        """
+        Async wrapper for subprocess execution.
+        """
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self.run_subprocess, prompt, source_url)
