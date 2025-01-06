@@ -70,10 +70,11 @@ export default function Register() {
   };
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="flex flex-row justify-between w-full pt-20">
+    <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      <div className="flex flex-row justify-between w-full">
+        <div>test</div>
         <form className="flex flex-col space-y-3">
-          <div className="text-2xl font-bold py-2 mt-32 pt-5">Register</div>
+          <div className="text-2xl font-bold py-2 pt-5">Register</div>
           <div>
             Please input your details so you can register for an account.
           </div>
