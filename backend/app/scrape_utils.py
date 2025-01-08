@@ -1,4 +1,3 @@
-from app.config import OPENAI_API_KEY
 import asyncio
 import json
 import subprocess
