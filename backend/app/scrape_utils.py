@@ -116,4 +116,4 @@ def run_searchscraper_subprocess(prompt):
             f"Subprocess failed with error: {process.stderr}"
         )
 
-    return json.loads(process.stdout)
+    return process.stdout
