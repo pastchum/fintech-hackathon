@@ -5,7 +5,7 @@ from scrapegraphai.graphs import SmartScraperGraph
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.config import OPENAI_APIKEY
+from config import OPENAI_APIKEY
 
 def main():
     # Parse arguments passed to the subprocess

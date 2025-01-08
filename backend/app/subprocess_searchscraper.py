@@ -5,7 +5,7 @@ from scrapegraphai.graphs import SearchGraph
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.config import OPENAI_API_KEY
+from config import OPENAI_APIKEY
 
 def main():
     # Parse arguments passed to the subprocess
@@ -22,7 +22,7 @@ def main():
 
     graph_config = {
         "llm": {
-            "api_key": OPENAI_API_KEY,
+            "api_key": OPENAI_APIKEY,
             "model": "openai/gpt-4o-mini",
         },
         "settings": {
