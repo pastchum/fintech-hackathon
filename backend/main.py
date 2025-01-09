@@ -6,6 +6,7 @@ from typing import List
 from app.scrape_utils import run_scraper, run_searchscraper
 import tracemalloc
 import json
+import asyncio
 
 ## trace issue
 tracemalloc.start()
@@ -206,6 +207,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
                     # Run the scraper and collect results
                     result = await run_searchscraper(prompt=full_prompt)
+                    asyncio.sleep(2)
 
                     # Add the scraper result to the corresponding category
                     if result:  # Ensure the result is valid
@@ -222,6 +224,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
             # Run the scraper for each company keyword
             result = await run_searchscraper(prompt=full_prompt)
+            asyncio.sleep(2)
 
             # Add the scraper result to the corresponding company flag
             if result:  # Ensure the result is valid
@@ -236,7 +239,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
         # Combine person and company results
         final_result = {
             "Persons": person_result,
-            "Company": company_results
+            company: company_results
         }
 
         return final_result
