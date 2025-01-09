@@ -207,7 +207,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
                     # Run the scraper and collect results
                     result = await run_searchscraper(prompt=full_prompt)
-                    asyncio.sleep(2)
+                    # asyncio.sleep(2)
 
                     # Add the scraper result to the corresponding category
                     if result:  # Ensure the result is valid
@@ -224,7 +224,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
             # Run the scraper for each company keyword
             result = await run_searchscraper(prompt=full_prompt)
-            asyncio.sleep(2)
+            # asyncio.sleep(2)
 
             # Add the scraper result to the corresponding company flag
             if result:  # Ensure the result is valid
