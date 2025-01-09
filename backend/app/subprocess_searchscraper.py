@@ -39,7 +39,7 @@ def main():
     try:
         print(prompt)
         result = smart_scraper_graph.run()  # Run synchronously in the subprocess
-        print(json.dumps(result))
+        return result
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
