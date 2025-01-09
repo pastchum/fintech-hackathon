@@ -95,40 +95,47 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
         # Process appointment holders
         for role, name in key_appt_holders_info:
-            # Create a unique categories dictionary for each full_title
-            categories = {category: [] for category in keyword_map.keys()}
+            try:
+                # Create a unique categories dictionary for each full_title
+                categories = {category: [] for category in keyword_map.keys()}
 
-            full_title = f"{name}, {role} of {company}"
-            prompt_with_name = person_prompt.replace("PERSON", full_title)
+                full_title = f"{name}, {role} of {company}"
+                prompt_with_name = person_prompt.replace("PERSON", full_title)
 
-            for category, flaglist in keyword_map.items():
-                for flag in flaglist:
-                    full_prompt = prompt_with_name.replace("KEYWORD", flag)
+                for category, flaglist in keyword_map.items():
+                    for flag in flaglist:
+                        full_prompt = prompt_with_name.replace("KEYWORD", flag)
 
-                    # Run the scraper and collect results
-                    result = await run_searchscraper(prompt=full_prompt)
-                    await asyncio.sleep(2)
+                        # Run the scraper and collect results
+                        result = await run_searchscraper(prompt=full_prompt)
+                        await asyncio.sleep(2)
 
-                    # Add the scraper result to the corresponding category
-                    if result and isinstance(result, dict):
-                        categories[category].append(result)
+                        # Add the scraper result to the corresponding category
+                        if result:
+                            categories[category].append(result)
 
-            # Append the full_title and its categories to person_output
-            person_output.append((full_title, categories))
+                # Append the full_title and its categories to person_output
+                person_output.append((full_title, categories))
+            
+            except Exception as e: 
+                continue
 
         # Process company keywords
         company_results = {flag: [] for flag in company_flags}
 
         for flag in company_flags:
-            full_prompt = company_prompt.replace("COMPANY", company).replace("KEYWORD", flag)
+            try:
+                full_prompt = company_prompt.replace("COMPANY", company).replace("KEYWORD", flag)
 
-            # Run the scraper for each company keyword
-            result = await run_searchscraper(prompt=full_prompt)
-            await asyncio.sleep(2)
+                # Run the scraper for each company keyword
+                result = await run_searchscraper(prompt=full_prompt)
+                await asyncio.sleep(2)
 
-            # Add the scraper result to the corresponding company flag
-            if result:  # Ensure the result is valid
-                company_results[flag].append(result)
+                # Add the scraper result to the corresponding company flag
+                if result:  # Ensure the result is valid
+                    company_results[flag].append(result)
+            except Exception as e:
+                continue
 
         if not person_output:
             person_output = [{"note": "No results found for appointment holders"}]
