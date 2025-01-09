@@ -28,7 +28,7 @@ export default function Register() {
   const [fields, setFields] =
     useState<{ id: number; name: string; position: string }[]>();
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     var additional: { [key: string]: string } = {};
@@ -72,7 +72,7 @@ export default function Register() {
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="flex flex-row justify-between w-full">
-        <div>test</div>
+        <div></div>
         <form className="flex flex-col space-y-3">
           <div className="text-2xl font-bold py-2 pt-5">Register</div>
           <div>
