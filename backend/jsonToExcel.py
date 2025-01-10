@@ -10,7 +10,7 @@ def convert_to_excel(person_result, company_results, company):
                     "Name and Role": full_title.split(", ")[1], 
                     "Category": category,
                     "Title": result["title"],
-                    "Description": result["desc"],
+                    "Description": result["description"],
                     "Link": result["link"],
                 })
 
@@ -23,7 +23,7 @@ def convert_to_excel(person_result, company_results, company):
             company_data.append({
                 "Category": category,
                 "Title": result["title"],
-                "Description": result["desc"],
+                "Description": result["description"],
                 "Link": result["link"],
             })
 

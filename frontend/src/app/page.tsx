@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { Input } from "@nextui-org/input";
@@ -73,12 +73,13 @@ export default function Register() {
         throw new Error("Error sending to backend");
       }
       const jsonData = await response.json();
+      console.log("jsonData: " + jsonData);
       setData(jsonData);
     } catch (e) {
       console.error("Error submitting form: ", e);
       alert("Error");
     } finally {
-      console.log(data);
+      console.log("loaded from server successfully");
     }
   };
 
@@ -97,6 +98,10 @@ export default function Register() {
       )
     );
   };
+
+  useEffect(() => {
+    console.log("Data: " + data?.Persons);
+  }, [data]);
 
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">

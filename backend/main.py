@@ -63,15 +63,15 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
     person_prompt = """List out any non pdf article regarding PERSON,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, desc and link.
-    The value of title is the title of the article, the value of desc is a brief description of the article and the value of link is the link to the article which
+    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, description and link.
+    The value of title is the title of the article, the value of description is a brief description of the article and the value of link is the link to the article which
     exclude all links to PDFs or non-HTML resources."""
 
     company_prompt = """List out any non pdf article regarding COMPANY,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, desc and link.
-    The value of title is the title of the article, the value of desc is a brief description of the article and the value of link is the link to the article which
+    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, description and link.
+    The value of title is the title of the article, the value of description is a brief description of the article and the value of link is the link to the article which
     exclude all links to PDFs or non-HTML resources."""
 
     # Dictionaries of person-related keywords
@@ -97,9 +97,9 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
     # Single-layer array for company keywords
     company_flags = [
-        "anti-money laundering violations",
-        "know your customer failures",
-        "foreign corrupt practices act breaches",
+        "Anti-money Laundering Violations",
+        "Know Your Customer Failures",
+        "Foreign Corrupt Practices Act Breaches",
         "GDPR violations"
     ]
 
@@ -126,13 +126,12 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
                         # Run the scraper and collect results
                         result = await run_searchscraper(prompt=full_prompt)
+                        print(result)
                         await asyncio.sleep(2)
 
                         # Add the scraper result to the corresponding category
                         if result:
                             categories[category].append(result)
-                        else:
-                            categories[category].append({flag: []})
 
                 # Append the full_title and its categories to person_output
                 person_output.append((full_title, categories))
@@ -154,8 +153,6 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
                 # Add the scraper result to the corresponding company flag
                 if result:  # Ensure the result is valid
                     company_results[flag].append(result)
-                else:
-                    company_results[flag].append({flag: []})
             except Exception as e:
                 continue
 
@@ -191,7 +188,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
             "Persons": person_result,
             company: company_results
         }
-        output_excel = await convert_to_excel(person_result, company_results, company)
+        #output_excel = await convert_to_excel(person_result, company_results, company)
         return final_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

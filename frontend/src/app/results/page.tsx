@@ -20,7 +20,10 @@ export default function ResultsPage() {
   const [company, setCompany] = useState<Record<string, Categories>>();
 
   useEffect(() => {
+    console.log(data);
+
     if (data) {
+      console.log(data);
       setPersons(data?.Persons);
       setCompany(
         Object.entries(data)
@@ -30,6 +33,8 @@ export default function ResultsPage() {
             return obj;
           }, {})
       );
+    } else {
+      setData(test);
     }
   }, [data]);
 
@@ -139,7 +144,7 @@ export default function ResultsPage() {
                   {company &&
                     Object.entries(company).map(([name, data]) => (
                       <div key={name}>
-                        <div>{name}</div>
+                        <div className="font-bold text-2xl">{name}</div>
                         {Object.entries(data).map(([category, articles]) => (
                           <div key={category} className="mt-4">
                             <div className="font-semibold">{category}</div>
