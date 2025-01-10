@@ -131,6 +131,8 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
                         # Add the scraper result to the corresponding category
                         if result:
                             categories[category].append(result)
+                        else:
+                            categories[category].append({flag: []})
 
                 # Append the full_title and its categories to person_output
                 person_output.append((full_title, categories))
@@ -152,6 +154,8 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
                 # Add the scraper result to the corresponding company flag
                 if result:  # Ensure the result is valid
                     company_results[flag].append(result)
+                else:
+                    company_results[flag].append({flag: []})
             except Exception as e:
                 continue
 
