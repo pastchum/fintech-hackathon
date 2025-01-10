@@ -2,3 +2,4 @@ fastapi
 uvicorn
 scrapegraphai
 python-dotenv
+pandas
