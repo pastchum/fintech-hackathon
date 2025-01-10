@@ -1,6 +1,7 @@
 "use client";
 
 import { Key, useEffect, useState } from "react";
+import Image from "next/image";
 
 import RenderArticle, { Articles } from "@/components/RenderArticle";
 import {
@@ -69,12 +70,12 @@ export default function ResultsPage() {
   return (
     <div className="min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <div className="fixed flex flex-col">
-        <div className="flex-row flex space-x-1 font-bold text-xl">
+        <Image src={northerntrustlogo} alt="logo" height={25} width={75} />
+        <div className="flex-row flex space-x-1 font-bold text-4xl">
           <div className="text-green-700">SCRAPE</div>{" "}
           <div className="font-italics">Secure</div>
         </div>
-        <br />
-        <div className="">
+        <div className="mt-2">
           Results for Company:{" "}
           {company && Object.entries(company).map(([name, categories]) => name)}
         </div>
