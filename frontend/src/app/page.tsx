@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { Input } from "@nextui-org/input";
 
@@ -24,12 +25,15 @@ export default function Register() {
   const [CEO, setCEO] = useState<string>("");
   const [COO, setCOO] = useState<string>("");
   const [CFO, setCFO] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
 
   const [fields, setFields] =
     useState<{ id: number; name: string; position: string }[]>();
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     var additional: { [key: string]: string } = {};
 
@@ -51,6 +55,27 @@ export default function Register() {
     };
 
     console.log(formSubmit);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/searchgraphscrape", {
+        body: JSON.stringify(formSubmit),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Error sending to backend");
+      }
+      const jsonData = response.json();
+      setData(jsonData);
+    } catch (e) {
+      console.error("Error submitting form: ", e);
+      alert("Error");
+    } finally {
+      console.log(data);
+    }
   };
 
   const addField = () => {
