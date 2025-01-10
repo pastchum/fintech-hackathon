@@ -2,6 +2,7 @@
 
 import { Key, useEffect, useState } from "react";
 import Image from "next/image";
+import northerntrustlogo from "@/icons/northern_trust_logo.png";
 
 import RenderArticle, { Articles } from "@/components/RenderArticle";
 import {
