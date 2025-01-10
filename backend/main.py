@@ -63,14 +63,16 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
     person_prompt = """List out any non pdf article regarding PERSON,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me the title of each article, and a brief description of each article.
-    Give me the link to each article in a separate field in JSON format."""
+    Return me a JSON object containing the title of each article, a brief description of each article 
+    and the link to each article in a separate field. Return only content from HTML pages, 
+    and exclude all links to PDFs or non-HTML resources."""
 
     company_prompt = """List out any non pdf article regarding COMPANY,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me the title of each article, and a brief description of each article.
-    Give me the link to each article in a separate field in JSON format. Return only content from HTML pages, and exclude all links to PDFs or non-HTML resources."""
+    Return me a JSON object containing the title of each article, a brief description of each article 
+    and the link to each article in a separate field. Return only content from HTML pages, 
+    and exclude all links to PDFs or non-HTML resources."""
 
     # Dictionaries of person-related keywords
     keyword_map = {
