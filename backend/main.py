@@ -7,7 +7,7 @@ from app.scrape_utils import run_scraper, run_searchscraper
 import tracemalloc
 import json
 import asyncio
-
+from jsonToExcel import convert_to_excel
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
@@ -63,16 +63,16 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
     person_prompt = """List out any non pdf article regarding PERSON,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me a JSON object containing the title of each article, a brief description of each article 
-    and the link to each article in a separate field. Return only content from HTML pages, 
-    and exclude all links to PDFs or non-HTML resources."""
+    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, desc and link.
+    The value of title is the title of the article, the value of desc is a brief description of the article and the value of link is the link to the article which
+    exclude all links to PDFs or non-HTML resources."""
 
     company_prompt = """List out any non pdf article regarding COMPANY,
     that contains any unsavoury news only regarding KEYWORD.
     Consider only content from HTML pages, and exclude all links to PDFs or non-HTML resources.
-    Return me a JSON object containing the title of each article, a brief description of each article 
-    and the link to each article in a separate field. Return only content from HTML pages, 
-    and exclude all links to PDFs or non-HTML resources."""
+    Return me a JSON object that strictly follows this formatting: It has 3 keys, title, desc and link.
+    The value of title is the title of the article, the value of desc is a brief description of the article and the value of link is the link to the article which
+    exclude all links to PDFs or non-HTML resources."""
 
     # Dictionaries of person-related keywords
     keyword_map = {
@@ -170,7 +170,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
 
                 # Ensure categories is a dictionary; skip if invalid
                 if isinstance(categories, dict):
-                    person_result[full_title] = {"Categories": categories}
+                    person_result[full_title] = categories
                 else:
                     # Log invalid categories for debugging but continue
                     print(f"Skipping invalid categories for {full_title}: {categories}")
@@ -187,7 +187,7 @@ async def searchgraph_endpoint(request: SearchGraphScrapeRequest):
             "Persons": person_result,
             company: company_results
         }
-
+        output_excel = await convert_to_excel(person_result, company_results, company)
         return final_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
